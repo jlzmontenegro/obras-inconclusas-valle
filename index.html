@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Obras inconclusas del Valle</title>
+<style>
+:root{
+  color-scheme: light;
+  --bg:#f4f3ef; --surface:#fcfcfb; --surface-2:#f0efec; --line:#e2e0da; --line-2:#cfccc4;
+  --text:#0b0b0b; --text-2:#52514e; --muted:#7a7873;
+  --accent:#2a78d6; --accent-ink:#1c5cab;
+  --seq-0:#eceae5; --seq-1:#cde2fb; --seq-2:#9ec5f4; --seq-3:#5598e7; --seq-4:#256abf; --seq-5:#0d366b;
+  --s-inconclusa:#2a78d6; --s-sinuso:#eb6834;
+  --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+  --radius:12px; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+a{color:var(--accent-ink)}
+.wrap{max-width:1360px;margin:0 auto;padding:0 20px 60px}
+header.hero{background:linear-gradient(135deg,#0d366b 0%,#1c5cab 60%,#2a78d6 100%);color:#fff;padding:26px 0 22px;margin-bottom:18px}
+header.hero .wrap{padding-bottom:0}
+.hero h1{margin:0 0 4px;font-size:28px;letter-spacing:-.3px}
+.hero p{margin:0;color:#dce9fb;max-width:900px}
+.hero .meta{margin-top:10px;font-size:12.5px;color:#b9d3f5}
+.hero .meta a{color:#fff}
+.hero-row{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+.btn{border:1px solid var(--line-2);background:var(--surface);color:var(--text);border-radius:8px;padding:7px 12px;font:inherit;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:#fff;color:#0d366b;border-color:#fff;font-weight:600}
+.btn.sm{padding:4px 9px;font-size:12.5px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}
+.card h2{font-size:15px;margin:0 0 2px}
+.card .sub{color:var(--text-2);font-size:12.5px;margin:0 0 12px}
+.grid{display:grid;gap:14px}
+.g-kpi{grid-template-columns:repeat(6,minmax(0,1fr))}
+.g-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g-map{grid-template-columns:minmax(0,1.55fr) minmax(0,1fr)}
+section{margin-top:14px}
+.kpi{padding:14px 16px}
+.kpi .lbl{color:var(--text-2);font-size:12.5px}
+.kpi .val{font-size:24px;font-weight:700;letter-spacing:-.4px;margin-top:2px;font-variant-numeric:tabular-nums}
+.kpi .det{color:var(--muted);font-size:12px;margin-top:2px}
+/* hallazgos */
+.findings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 22px;margin:6px 0 0;padding:0;list-style:none}
+.findings li{position:relative;padding-left:20px;color:var(--text);font-size:13.5px}
+.findings li:before{content:"";position:absolute;left:4px;top:8px;width:7px;height:7px;border-radius:2px;background:var(--accent)}
+.findings b{font-variant-numeric:tabular-nums}
+.findings a{cursor:pointer;text-decoration:underline dotted}
+/* filtros */
+.filters{position:sticky;top:0;z-index:20;background:rgba(244,243,239,.94);backdrop-filter:blur(6px);padding:10px 0;margin-top:14px;border-bottom:1px solid var(--line)}
+.frow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search{flex:1 1 280px;min-width:220px;position:relative}
+.search input{width:100%;padding:8px 12px 8px 32px;border:1px solid var(--line-2);border-radius:8px;font:inherit;background:var(--surface)}
+.search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:7px 11px;font:inherit;font-size:13px;cursor:pointer;color:var(--text-2)}
+.seg button.on{background:var(--accent);color:#fff}
+.seg-lbl{font-size:12.5px;color:var(--text-2)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:#e3eefc;color:#0d366b;border:1px solid #b7d3f6;border-radius:999px;padding:3px 6px 3px 10px;font-size:12.5px}
+.chip button{border:0;background:#cde2fb;color:#0d366b;border-radius:50%;width:18px;height:18px;cursor:pointer;line-height:16px;padding:0}
+.chip-k{color:var(--text-2)}
+.count-lbl{font-size:12.5px;color:var(--text-2);margin-left:auto}
+/* barras */
+.bars{display:flex;flex-direction:column;gap:3px}
+.bar{display:grid;grid-template-columns:minmax(0,42%) 1fr;gap:10px;align-items:center;cursor:pointer;padding:3px 6px;border-radius:6px}
+.bar:hover{background:var(--surface-2)}
+.bar.sel{background:#e3eefc}
+.bar.dim{opacity:.45}
+.bar .nm{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.bar .tr{display:flex;align-items:center;gap:8px;min-width:0}
+.bar .fill{height:14px;border-radius:0 4px 4px 0;background:var(--seq-4);min-width:2px;flex:none}
+.bar.sel .fill{background:var(--seq-5)}
+.bar .v{font-size:12px;color:var(--text-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.bars .more{font-size:12px;color:var(--accent-ink);cursor:pointer;padding:4px 6px;border:0;background:none;text-align:left}
+.stack{display:flex;height:16px;border-radius:4px;overflow:hidden;gap:2px;background:var(--surface)}
+.empty{color:var(--muted);font-size:13px;padding:10px 0}
+/* mapa */
+#mapa svg{width:100%;height:auto;display:block}
+#mapa path.mun{stroke:#fff;stroke-width:1;cursor:pointer;transition:opacity .15s}
+#mapa path.mun:hover{stroke:#0b0b0b;stroke-width:1.6}
+#mapa path.mun.sel{stroke:#0b0b0b;stroke-width:2.2}
+#mapa circle.pt{stroke:#fff;stroke-width:2;cursor:pointer}
+#mapa circle.pt:hover{stroke:#0b0b0b}
+.legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--text-2);margin-top:8px}
+.legend .sw{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:5px}
+.legend .dot{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:-1px;margin-right:5px;border:2px solid #fff;box-shadow:0 0 0 1px var(--line-2)}
+.ramp{display:inline-flex;gap:2px;vertical-align:-2px;margin:0 6px}
+.ramp i{width:18px;height:10px;border-radius:2px;display:inline-block}
+/* alertas */
+.alerts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.alert{border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;background:var(--surface);display:flex;gap:10px;align-items:flex-start}
+.alert:hover{border-color:var(--accent)}
+.alert.sel{border-color:var(--accent);background:#eef5fe;box-shadow:inset 0 0 0 1px var(--accent)}
+.alert .n{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.alert .t{font-size:12.5px;color:var(--text)}
+.alert .d{font-size:11.5px;color:var(--muted);margin-top:2px}
+.ico{flex:none;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700}
+.ico.warning{background:var(--warning);color:#3d2a00}.ico.serious{background:var(--serious)}.ico.critical{background:var(--critical)}.ico.good{background:var(--good)}.ico.info{background:var(--accent)}
+.mini-ico{width:17px;height:17px;font-size:10px;margin-right:2px}
+/* tabla */
+.tbl-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--surface-2);font-weight:600;font-size:12px;color:var(--text-2);white-space:nowrap;position:sticky;top:0;cursor:pointer;user-select:none}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:#f3f7fd}
+td .desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:440px}
+td .ent{color:var(--muted);font-size:12px}
+.badge{display:inline-block;border-radius:999px;padding:1px 8px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.badge.inc{background:#dbe9fb;color:#0d366b}
+.badge.sin{background:#fde3d7;color:#7a2e0e}
+.prog{display:flex;align-items:center;gap:6px;min-width:90px}
+.prog .b{flex:1;height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden}
+.prog .b i{display:block;height:100%;background:var(--seq-4);border-radius:0 3px 3px 0}
+.prog span{font-size:12px;color:var(--text-2);width:34px;text-align:right;font-variant-numeric:tabular-nums}
+.pager{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:10px;font-size:12.5px;color:var(--text-2)}
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(11,11,11,.42);z-index:50;display:none}
+.modal-bg.on{display:block}
+.modal{position:fixed;top:0;right:0;bottom:0;width:min(980px,100%);background:var(--bg);z-index:60;overflow:auto;transform:translateX(100%);transition:transform .2s ease;box-shadow:-10px 0 30px rgba(0,0,0,.15)}
+.modal.on{transform:none}
+.modal .mh{background:var(--surface);border-bottom:1px solid var(--line);padding:18px 22px;position:sticky;top:0;z-index:2}
+.modal .mh h3{margin:6px 0 4px;font-size:18px;line-height:1.3}
+.modal .mb{padding:16px 22px 40px}
+.modal .close{position:absolute;right:16px;top:14px}
+.modal .links{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 22px}
+.kv div{font-size:13px;border-bottom:1px dashed var(--line);padding:4px 0}
+.kv span{display:block;color:var(--muted);font-size:11.5px}
+.sec{margin-top:14px}
+.sec h4{margin:0 0 8px;font-size:14px;display:flex;align-items:center;gap:8px}
+.sec h4 .cnt{background:var(--surface-2);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--text-2);font-weight:600}
+.sec table{font-size:12.5px}
+.sec tbody tr{cursor:default}
+.sec tbody tr:hover td{background:none}
+.note{font-size:12.5px;color:var(--text-2);background:#fff8e6;border:1px solid #f6dc9c;border-radius:8px;padding:8px 10px;margin-top:8px}
+.ctr{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:10px;background:var(--surface)}
+.ctr .top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ctr .mods{margin:8px 0 0;padding:0;list-style:none;border-left:2px solid var(--line-2)}
+.ctr .mods li{padding:3px 0 3px 12px;font-size:12.5px;position:relative}
+.ctr .mods li:before{content:"";position:absolute;left:-5px;top:9px;width:8px;height:8px;border-radius:50%;background:var(--seq-3);border:2px solid var(--surface)}
+.tip{position:fixed;pointer-events:none;z-index:80;background:#0b0b0b;color:#fff;font-size:12.5px;border-radius:8px;padding:8px 10px;max-width:320px;box-shadow:0 4px 18px rgba(0,0,0,.25);display:none}
+.tip b{display:block;margin-bottom:2px}
+.tip .r{color:#c3c2b7}
+details.rules{margin-top:14px}
+details.rules summary{cursor:pointer;color:var(--text-2);font-size:13px}
+.foot{color:var(--muted);font-size:12px;margin-top:24px}
+code{background:var(--surface-2);padding:1px 5px;border-radius:4px;font-size:12px}
+@media (max-width:1100px){.g-kpi{grid-template-columns:repeat(3,minmax(0,1fr))}.alerts{grid-template-columns:repeat(2,minmax(0,1fr))}.g-3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:820px){.g-map,.g-2,.g-3,.findings{grid-template-columns:1fr}.g-kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.kv{grid-template-columns:1fr}.wrap{padding:0 16px 40px}.hero h1{font-size:22px}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-row">
+      <div>
+        <h1>Obras inconclusas y sin uso del Valle del Cauca</h1>
+        <p>Cada obra que las entidades públicas reportaron a la Contraloría como inconclusa o terminada pero sin uso: cuánto costó, cuánto se pagó, por qué se frenó, quién la contrató y qué garantías la respaldan.</p>
+        <div class="meta" id="meta"></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn primary" id="btnCsv">Descargar CSV</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <h2>Lo que muestran los datos</h2>
+    <p class="sub">Calculado sobre todas las obras, sin filtros. Los enlaces aplican el filtro correspondiente.</p>
+    <ul class="findings" id="hallazgos"></ul>
+  </div>
+
+  <div class="filters">
+    <div class="frow">
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Buscar obra, entidad, contratista, número de contrato, municipio…">
+      </div>
+      <span class="seg-lbl">Medir por</span>
+      <div class="seg" id="segMedida">
+        <button data-v="n" class="on">Nº de obras</button>
+        <button data-v="presupuesto">Presupuesto</button>
+        <button data-v="pagado">Pagado</button>
+      </div>
+      <span class="count-lbl" id="countLbl"></span>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <section class="grid g-kpi" id="kpis"></section>
+
+  <section class="card">
+    <h2>Alertas sobre los registros</h2>
+    <p class="sub">Inconsistencias y señales de riesgo detectadas al cruzar los formularios de cada obra. Haz clic para filtrar; puedes combinar varias.</p>
+    <div class="alerts" id="alertas"></div>
+  </section>
+
+  <section class="grid g-map">
+    <div class="card">
+      <h2>¿Dónde están?</h2>
+      <p class="sub" id="mapaSub"></p>
+      <div id="mapa"></div>
+      <div class="legend" id="mapaLeyenda"></div>
+    </div>
+    <div class="card">
+      <h2>Por municipio</h2>
+      <p class="sub">Municipio declarado por la entidad. Clic para filtrar.</p>
+      <div class="bars" id="b-muni"></div>
+    </div>
+  </section>
+
+  <section class="grid g-3">
+    <div class="card"><h2>¿Por qué se frenaron?</h2><p class="sub">Causa según el texto que reportó la entidad (reglas editables abajo).</p><div class="bars" id="b-causa"></div></div>
+    <div class="card"><h2>¿Qué tipo de obra?</h2><p class="sub">Clase de obra reportada.</p><div class="bars" id="b-clase"></div></div>
+    <div class="card"><h2>Estado de la obra</h2><p class="sub">Inconclusa o terminada pero sin uso.</p><div class="bars" id="b-grupo"></div>
+      <h2 style="margin-top:16px">Decisión administrativa</h2><p class="sub">Lo que la entidad decidió hacer con el contrato.</p><div class="bars" id="b-decision"></div></div>
+  </section>
+
+  <section class="grid g-3">
+    <div class="card"><h2>¿Cuánto alcanzaron a construir?</h2><p class="sub">Último avance físico reportado.</p><div class="bars" id="b-avance"></div></div>
+    <div class="card"><h2>¿Cuándo empezaron?</h2><p class="sub">Año de inicio del primer contrato de la obra.</p><div class="bars" id="b-inicio"></div></div>
+    <div class="card"><h2>¿Cuándo se reportaron?</h2><p class="sub">Año en que la entidad registró la obra ante la Contraloría.</p><div class="bars" id="b-registro"></div></div>
+  </section>
+
+  <section class="grid g-2">
+    <div class="card"><h2>¿Quién la reportó?</h2><p class="sub">Entidad responsable del registro.</p><div class="bars" id="b-entidad"></div></div>
+    <div class="card"><h2>¿Con qué plata?</h2><p class="sub">Fuentes de financiación (una obra puede tener varias; se cuenta en cada una).</p><div class="bars" id="b-fuente"></div></div>
+  </section>
+
+  <section class="grid g-3">
+    <div class="card"><h2>Procesos abiertos</h2><p class="sub">Procesos administrativos, civiles, fiscales o penales asociados.</p><div class="bars" id="b-proceso"></div></div>
+    <div class="card"><h2>Aseguradoras</h2><p class="sub">Compañías que expidieron las pólizas de las obras filtradas.</p><div class="bars" id="b-aseguradora"></div></div>
+    <div class="card"><h2>Personas que se repiten</h2><p class="sub">Contratistas, representantes, interventores, supervisores u ordenadores que aparecen en más de una obra.</p><div class="bars" id="b-persona"></div></div>
+  </section>
+
+  <section class="card">
+    <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline">
+      <div><h2>Las obras, una por una</h2><p class="sub">Clic en una fila para ver la ficha completa: contratos y otrosíes, pagos, presupuesto, fuentes, personas, pólizas, procesos y actas.</p></div>
+    </div>
+    <div class="tbl-wrap"><table id="tabla"><thead></thead><tbody></tbody></table></div>
+    <div class="pager" id="pager"></div>
+  </section>
+
+  <section class="card">
+    <h2>Registros con detalle pero sin ficha general</h2>
+    <p class="sub">Aparecen en el export oficial del COI con contratos, pagos o pólizas ubicados en el Valle, pero sin el formulario general (th2000), así que el buscador de la Contraloría no los muestra. Lo más probable es que hayan sido retirados del registro. No se suman en el resto del tablero.</p>
+    <div class="tbl-wrap"><table id="tablaH"><thead></thead><tbody></tbody></table></div>
+  </section>
+
+  <details class="rules card">
+    <summary><b>Cómo se calculó</b> (metodología y reglas editables)</summary>
+    <div style="margin-top:10px;font-size:13px;color:var(--text-2)">
+      <p><b>Fuente:</b> Consulta de Registros de Obras Inconclusas (COI) de la Contraloría General de la República. Se descargó la ficha de cada obra (<code>/api/project/report</code>, formularios th2000 a th2011) y se verificó contra el export nacional oficial (<code>data-export.zip</code>); las filas cuadran tabla por tabla. Una obra activa del Valle que el buscador no devuelve (Bolívar) se tomó del export.</p>
+      <p><b>Presupuesto:</b> <code>PRESUPUESTO_TOTAL</code> del formulario general. <b>Pagado:</b> suma de los pagos reportados (formulario 2003). <b>Valor contratado:</b> por cada número de contrato se toma su valor más alto (el formulario 2002 repite el contrato en cada otrosí, con el valor acumulado).</p>
+      <p><b>Posible duplicado:</b> dos obras de entidades distintas con el mismo presupuesto (diferencia menor a $1.000). El presupuesto total se muestra completo; el KPI indica cuánto se cuenta dos veces.</p>
+      <p><b>Coordenadas:</b> se ubicó cada punto en los límites municipales del DANE (MGN 2018). Si cae fuera del Valle o en otro municipio distinto al declarado, se marca como alerta y el punto no se dibuja (o se dibuja donde cae, respectivamente).</p>
+      <p><b>Causas y alertas:</b> las reglas por palabras clave están en el bloque <code>REGLAS</code> al inicio del script de esta página; se pueden editar con el Bloc de notas.</p>
+    </div>
+  </details>
+  <div class="foot" id="foot"></div>
+</div>
+
+<div class="modal-bg" id="modalBg"></div>
+<aside class="modal" id="modal" aria-modal="true" role="dialog"></aside>
+<div class="tip" id="tip"></div>
+
+<script src="datos.js" charset="utf-8"></script>
+<script>
+// ================= REGLAS EDITABLES =================
+// Texto normalizado: minúsculas, sin tildes. Gana la primera causa cuya palabra clave aparezca.
+const REGLAS = {
+  causas: [
+    ['Ya terminada o en uso (según la entidad)', ['culminada', 'en uso', 'funcionamiento', 'presta servicio', 'obra terminada', 'obras terminadas', 'equivocadamente']],
+    ['Incumplimiento del contratista', ['incumpl', 'caducidad', 'abandon', 'quiebra', 'ausente', 'no cumpli', 'atrasos', 'arbitraje', 'juridico', 'no ha sido entregada por el contratista', 'no podia continuar', 'fallas constructivas', 'deficiencas constructivas', 'deficiencias constructivas']],
+    ['Plata: reserva vencida, recursos o pagos', ['vigencia de la reserva', 'fenecimiento', 'falta de pago', 'no pago', 'falta de presupuesto', 'recursos', 'desequilib']],
+    ['Suspendida', ['suspend', 'supesdida']],
+    ['Contrato terminado o convenio vencido', ['terminado unilateral', 'mutuo acuerdo', 'liquidacion', 'finalizacion de convenio', 'sin terminacion']],
+    ['Diseño, permisos o licencias', ['diseno', 'licencia', 'permiso', 'concepto', 'ambiental', 'acometida', 'hidraul', 'ocupacion del cause', 'interventoria', 'estudios', 'planificacion']],
+    ['Clima u orden público', ['orden publico', 'invernal', 'oms', 'pandemia']],
+  ],
+  sinExplicacion: ['n/a', 'na', 'n.a.', 'n.a', ''],
+  // La entidad afirma que la obra ya está terminada / en uso / mal reportada (registro desactualizado)
+  yaResuelta: ['en uso', 'en funcionamiento', 'funcionamiento total', 'presta servicio', 'culminada', 'ya no es una obra inconclusa', 'equivocadamente', 'desvinculacion', 'finalizo y liquido', 'recontratado'],
+  noResuelta: ['no esta en uso', 'no se encuentra en uso', 'no se ha entregado para su uso'],
+};
+// =====================================================
+
+const OB = window.OBRAS || [], HU = window.HUERFANOS || [], MAPA = window.MAPA || [], META = window.META || {};
+const $ = s => document.querySelector(s);
+const norm = s => (s == null ? '' : String(s)).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+const esc = s => (s == null ? '' : String(s)).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nf = new Intl.NumberFormat('es-CO');
+const nf1 = new Intl.NumberFormat('es-CO', {maximumFractionDigits: 1});
+const money = v => {
+  if (v == null || isNaN(v)) return '—';
+  const a = Math.abs(v);
+  if (a >= 1e6) return '$' + nf.format(Math.round(v / 1e6)) + ' M';
+  return '$' + nf.format(Math.round(v));
+};
+const moneyFull = v => v == null ? '—' : '$' + nf.format(Math.round(v));
+const pct = v => v == null || isNaN(v) ? '—' : nf1.format(v) + '%';
+const titleCase = s => (s || '').toLowerCase().replace(/(^|[\s\-(])([a-záéíóúñü])/g, (m, a, b) => a + b.toUpperCase()).replace(/ (De|Del|Y|E|En) /g, w => w.toLowerCase()).replace(/\bS\.a\.?(s\.?)?/g, m => m.toUpperCase()).replace(/^./, c => c.toUpperCase());
+const fechaTxt = f => f ? f.split('-').reverse().join('/') : '—';
+const CORTE = new Date((META.corte_detalle || '2026-10-25') + 'T00:00:00');
+const MUN_NOMBRE = Object.fromEntries(MAPA.map(m => [m.cod, titleCase(m.nombre)]));
+const COI = 'https://obrasinconclusas.contraloria.gov.co';
+
+// ---------- enriquecer ----------
+// Una misma persona puede venir escrita con y sin tildes: se agrupa por identificación (o por nombre sin tildes)
+const PERS_FORMA = {}, PERS_ROL = {};
+function personaNombre(p) {
+  const k = p.IDENTIFICACION && String(p.IDENTIFICACION).length > 4 ? 'id' + p.IDENTIFICACION : 'nm' + norm(p.NOMBRE);
+  if (!PERS_FORMA[k]) PERS_FORMA[k] = titleCase(p.NOMBRE.trim());
+  const nom = PERS_FORMA[k];
+  (PERS_ROL[nom] = PERS_ROL[nom] || new Set()).add(p.ROL);
+  return nom;
+}
+function causaDe(g) {
+  const t = norm((g.PORQUE_ESTADO || '') + ' ' + (g.RAZ_NOUSO || ''));
+  const base = norm(g.PORQUE_ESTADO || g.RAZ_NOUSO || '');
+  if (REGLAS.sinExplicacion.includes(base)) return 'Sin explicación';
+  if (base.includes('razon desconocida') || base.includes('falta de informacion')) return 'Sin explicación';
+  for (const [nombre, kws] of REGLAS.causas) if (kws.some(k => norm(base).includes(k))) return nombre;
+  for (const [nombre, kws] of REGLAS.causas) if (kws.some(k => t.includes(k))) return nombre;
+  return 'Otra';
+}
+function yaResuelta(g) {
+  let t = norm((g.PORQUE_ESTADO || '') + ' | ' + (g.RAZ_NOUSO || ''));
+  REGLAS.noResuelta.forEach(k => t = t.split(k).join(' '));
+  return REGLAS.yaResuelta.some(k => t.includes(k));
+}
+function contratosDe(o) {
+  const m = new Map();
+  for (const c of o.contratos || []) {
+    const k = norm(c.NUMERO_CONTRATO) || ('#' + m.size);
+    if (!m.has(k)) m.set(k, {numero: c.NUMERO_CONTRATO, filas: []});
+    m.get(k).filas.push(c);
+  }
+  return [...m.values()].map(x => {
+    const f = x.filas;
+    const ini = f.find(r => /inicial/i.test(r.TIPO_MODIFICACION || '')) || f[0];
+    const valor = Math.max(...f.map(r => r.VALOR_CONTRATO || 0));
+    const fechas = f.map(r => r.FECHA_INICIO).filter(x => x && x >= '1990').sort();   // 1900/1905 = fecha de relleno
+    return {numero: x.numero, objeto: ini.OBJETO, valorInicial: ini.VALOR_CONTRATO, valor, inicio: fechas[0] || null,
+      plazo: ini.PLAZO_EN_DIAS, secop: ini.ESTA_SECOP, codSecop: ini.CODIGO_SECOP, justificacion: ini.JUSTIFICACION,
+      mods: f.filter(r => r !== ini)};
+  });
+}
+const AV_RANGOS = ['0%', '1–25%', '26–50%', '51–75%', '76–99%', '100%', 'Sin dato'];
+function rangoAvance(a) {
+  if (a == null || isNaN(a)) return 'Sin dato';
+  if (a <= 0) return '0%'; if (a <= 25) return '1–25%'; if (a <= 50) return '26–50%';
+  if (a <= 75) return '51–75%'; if (a < 100) return '76–99%'; return '100%';
+}
+function enriquecer(o, huerfano) {
+  const g = o.general || {};
+  const ub = (o.ubicaciones || [])[0] || {};
+  o.codMun = g.COD_CIUDAD ? String(g.COD_CIUDAD) : (ub.COD_CIUDAD || '').trim();
+  o.muni = MUN_NOMBRE[o.codMun] || titleCase((g.CIUDAD || ub.CIUDAD || 'Sin dato').replace(/ - VALLE DEL CAUCA/i, ''));
+  o.desc = g.DESCRIPCION || ((o.contratos || [])[0] || {}).OBJETO || '(sin descripción)';
+  o.entidad = g.NOMBREENTIDAD ? titleCase(g.NOMBREENTIDAD.replace(/\s+-\s+VALLE DEL CAUCA/i, '').trim()) : titleCase(((o.ejecutores || [])[0] || {}).ENTIDAD || 'Sin dato');
+  o.clase = (g.CLASE_OBRA || 'Sin dato').trim();
+  o.grupo = g.GRUPO === 'OBRA SIN USO' ? 'Terminada sin uso' : (g.GRUPO ? 'Inconclusa' : 'Sin dato');
+  o.decision = g.DECISION_ADMIN ? g.DECISION_ADMIN.replace('Términación', 'Terminación') : 'Sin dato';
+  o.presupuesto = g.PRESUPUESTO_TOTAL || 0;
+  o.pagos = (o.pagos || []).slice().sort((a, b) => (a.FECHA || '').localeCompare(b.FECHA || ''));
+  o.pagado = o.pagos.reduce((s, p) => s + (p.VALOR || 0), 0);
+  o.ctr = contratosDe(o);
+  o.contratado = o.ctr.reduce((s, c) => s + (c.valor || 0), 0);
+  o.avance = g.ULTIMO_AVANCE;
+  o.avRango = rangoAvance(o.avance);
+  o.registro = g.FECHA_INICIAL_REGISTRO ? g.FECHA_INICIAL_REGISTRO.slice(0, 4) : 'Sin dato';
+  o.inicio = o.ctr.map(c => c.inicio).filter(Boolean).sort()[0] || null;
+  o.anioInicio = o.inicio ? o.inicio.slice(0, 4) : 'Sin dato';
+  o.anios = o.inicio ? (CORTE - new Date(o.inicio + 'T00:00:00')) / 31557600000 : null;
+  o.causa = huerfano ? 'Sin dato' : causaDe(g);
+  o.fuentesN = [...new Set((o.fuentes || []).map(f => (f.FUENTE || '').trim()).filter(Boolean))];
+  o.procesosN = [...new Set((o.procesos || []).map(p => (p.TIPO || '').trim()).filter(Boolean))];
+  o.aseguradoras = [...new Set((o.polizas || []).map(p => titleCase((p.NOMBRE || '').replace(/\s+s\.?a\.?$/i, '').trim())).filter(Boolean))];
+  o.asegurado = (o.polizas || []).reduce((s, p) => s + (p.VALOR_ASEGURADO || 0), 0);
+  o.indemnizado = (o.polizas || []).reduce((s, p) => s + (p.VALOR_INDEMNIZADO || 0), 0);
+  o.personasN = [...new Set((o.personas || []).filter(p => p.NOMBRE && !/aseguradora/i.test(p.ROL || '')).map(personaNombre))];
+  o.lat = g.LATITUDINICIAL; o.lon = g.LONGITUDINICIAL;
+  o.alertas = new Set();
+  if (!huerfano) {
+    if (yaResuelta(g)) o.alertas.add('resuelta');
+    if (!o.geo || !o.geo.mpio_coord) o.alertas.add('geoFuera');
+    else if (o.geo.mpio_coord !== o.codMun) o.alertas.add('geoOtro');
+    if ((o.avance || 0) <= 0 && o.pagado > 0) o.alertas.add('pagoSinAvance');
+    if (o.presupuesto > 0 && o.pagado > o.presupuesto * 1.05) o.alertas.add('pagoMayor');
+    if ((o.contratos || []).some(c => c.FECHA_INICIO && c.FECHA_INICIO < '1990')) o.alertas.add('fechaInvalida');
+    if (o.grupo === 'Terminada sin uso' && !o.alertas.has('resuelta')) o.alertas.add('terminadaSinUso');
+    if (o.decision === 'No se ha definido') o.alertas.add('sinDecision');
+    if (o.indemnizado > 0) o.alertas.add('polizaCobrada');
+    if (o.anios != null && o.anios >= 10) o.alertas.add('diezAnios');
+  }
+  o.txt = norm([o.id, o.desc, o.entidad, o.muni, o.clase, o.causa, g.PORQUE_ESTADO, g.RAZ_NOUSO, g.NIT_ENTIDAD,
+    ...o.ctr.map(c => c.numero + ' ' + c.objeto), ...(o.personas || []).map(p => p.NOMBRE + ' ' + p.IDENTIFICACION),
+    ...o.aseguradoras, ...(o.polizas || []).map(p => p.NUMERO_POLIZA), ...o.fuentesN].join(' | '));
+  return o;
+}
+OB.forEach(o => enriquecer(o, false));
+HU.forEach(o => enriquecer(o, true));
+// posibles duplicados: mismo presupuesto (±$1.000) en entidades distintas
+const dupDe = new Map();
+OB.forEach(a => OB.forEach(b => {
+  if (a !== b && a.presupuesto > 1e8 && Math.abs(a.presupuesto - b.presupuesto) < 1000 && a.cod_entidad !== b.cod_entidad) {
+    a.alertas.add('duplicado'); dupDe.set(a.id, [...(dupDe.get(a.id) || []), b.id]);
+  }
+}));
+const PRES_DUP = (() => { // presupuesto que se cuenta dos veces (la segunda obra de cada par)
+  const vistos = new Set(); let s = 0;
+  OB.filter(o => dupDe.has(o.id)).forEach(o => { if (dupDe.get(o.id).some(x => vistos.has(x))) s += o.presupuesto; vistos.add(o.id); });
+  return s;
+})();
+// personas que se repiten en más de una obra
+const PERS_CNT = {};
+OB.forEach(o => o.personasN.forEach(p => PERS_CNT[p] = (PERS_CNT[p] || 0) + 1));
+
+const ALERTAS = [
+  {k: 'resuelta', t: 'La entidad dice que ya está terminada o en uso', d: 'El registro sigue activo como obra problemática: está desactualizado o mal reportado.', lvl: 'warning', ic: '!'},
+  {k: 'duplicado', t: 'Posible registro duplicado', d: 'Mismo presupuesto reportado por otra entidad.', lvl: 'serious', ic: '2×'},
+  {k: 'pagoSinAvance', t: 'Pagos sin avance físico', d: 'Tiene pagos reportados pero el avance físico es 0%.', lvl: 'critical', ic: '$'},
+  {k: 'pagoMayor', t: 'Pagos por encima del presupuesto', d: 'Los pagos reportados superan en más de 5% el presupuesto: sobrecosto o error de reporte.', lvl: 'critical', ic: '$+'},
+  {k: 'terminadaSinUso', t: 'Terminada, pero nadie la usa', d: 'Obra construida que no presta servicio.', lvl: 'serious', ic: '∅'},
+  {k: 'diezAnios', t: 'Más de 10 años desde que empezó', d: 'Contada desde el inicio del primer contrato.', lvl: 'serious', ic: '10'},
+  {k: 'sinDecision', t: 'Sin decisión administrativa', d: 'La entidad no ha definido qué hacer con el contrato.', lvl: 'warning', ic: '?'},
+  {k: 'polizaCobrada', t: 'Póliza indemnizada', d: 'La aseguradora pagó por el siniestro.', lvl: 'good', ic: '✓'},
+  {k: 'geoFuera', t: 'Coordenadas fuera del Valle', d: 'El punto reportado cae en el mar, en otro departamento o es un valor de relleno (0, -76.5).', lvl: 'warning', ic: '⌖'},
+  {k: 'geoOtro', t: 'Coordenadas en otro municipio', d: 'El punto cae en un municipio distinto al declarado.', lvl: 'warning', ic: '⌖'},
+  {k: 'fechaInvalida', t: 'Fecha de contrato inválida', d: 'Contrato con fecha de inicio de relleno (años 1900 o 1905).', lvl: 'warning', ic: '⌛'},
+];
+const ALERTA = Object.fromEntries(ALERTAS.map(a => [a.k, a]));
+
+// ---------- estado y filtros ----------
+const DIMS = {
+  muni: {lbl: 'Municipio', get: o => [o.muni]},
+  causa: {lbl: 'Causa', get: o => [o.causa]},
+  clase: {lbl: 'Clase', get: o => [o.clase]},
+  grupo: {lbl: 'Estado', get: o => [o.grupo]},
+  decision: {lbl: 'Decisión', get: o => [o.decision]},
+  avance: {lbl: 'Avance', get: o => [o.avRango]},
+  inicio: {lbl: 'Inicio', get: o => [o.anioInicio]},
+  registro: {lbl: 'Registro', get: o => [o.registro]},
+  entidad: {lbl: 'Entidad', get: o => [o.entidad]},
+  fuente: {lbl: 'Fuente', get: o => o.fuentesN.length ? o.fuentesN : ['Sin dato']},
+  proceso: {lbl: 'Proceso', get: o => o.procesosN.length ? o.procesosN : ['Ninguno reportado']},
+  aseguradora: {lbl: 'Aseguradora', get: o => o.aseguradoras.length ? o.aseguradoras : ['Sin póliza reportada']},
+  persona: {lbl: 'Persona', get: o => o.personasN.filter(p => PERS_CNT[p] > 1)},
+  alerta: {lbl: 'Alerta', get: o => [...o.alertas], fmt: v => ALERTA[v] ? ALERTA[v].t : v},
+};
+const ST = {q: '', medida: 'n', f: Object.fromEntries(Object.keys(DIMS).map(k => [k, new Set()])), sort: {k: 'presupuesto', dir: -1}, page: 0, abiertos: {}};
+const MEDIDAS = {n: {lbl: 'número de obras', v: o => 1, fmt: v => nf.format(v)}, presupuesto: {lbl: 'presupuesto', v: o => o.presupuesto, fmt: money}, pagado: {lbl: 'pagado', v: o => o.pagado, fmt: money}};
+
+function pasa(o, excepto) {
+  if (ST.q) { const ws = norm(ST.q).split(' '); if (!ws.every(w => o.txt.includes(w))) return false; }
+  for (const [k, set] of Object.entries(ST.f)) {
+    if (k === excepto || !set.size) continue;
+    const vals = DIMS[k].get(o);
+    if (k === 'alerta') { if (![...set].every(v => vals.includes(v))) return false; }   // alertas: se combinan con Y
+    else if (!vals.some(v => set.has(v))) return false;
+  }
+  return true;
+}
+const filtradas = excepto => OB.filter(o => pasa(o, excepto));
+function toggle(dim, v) { const s = ST.f[dim]; s.has(v) ? s.delete(v) : s.add(v); ST.page = 0; render(); }
+
+// ---------- tooltip ----------
+const tip = $('#tip');
+function showTip(e, html) { tip.innerHTML = html; tip.style.display = 'block'; moveTip(e); }
+function moveTip(e) { const w = tip.offsetWidth, h = tip.offsetHeight; let x = e.clientX + 14, y = e.clientY + 14; if (x + w > innerWidth - 8) x = e.clientX - w - 14; if (y + h > innerHeight - 8) y = e.clientY - h - 14; tip.style.left = x + 'px'; tip.style.top = y + 'px'; }
+const hideTip = () => tip.style.display = 'none';
+
+// ---------- barras ----------
+function agrupar(arr, dim) {
+  const M = MEDIDAS[ST.medida], m = new Map();
+  for (const o of arr) for (const v of DIMS[dim].get(o)) {
+    const x = m.get(v) || {k: v, n: 0, presupuesto: 0, pagado: 0}; x.n++; x.presupuesto += o.presupuesto; x.pagado += o.pagado; m.set(v, x);
+  }
+  return [...m.values()].map(x => ({...x, val: ST.medida === 'n' ? x.n : x[ST.medida]}));
+}
+function barras(id, dim, opt = {}) {
+  const el = document.getElementById('b-' + id);
+  let rows = agrupar(filtradas(dim), dim);
+  if (opt.orden) rows.sort((a, b) => opt.orden.indexOf(a.k) - opt.orden.indexOf(b.k));
+  else if (opt.cronologico) rows.sort((a, b) => String(a.k).localeCompare(String(b.k)));
+  else rows.sort((a, b) => b.val - a.val || b.n - a.n);
+  if (opt.ocultar) rows = rows.filter(r => !opt.ocultar.includes(r.k));
+  const sel = ST.f[dim];
+  // los seleccionados siempre visibles
+  const lim = opt.lim || 10, abierto = ST.abiertos[id];
+  let vis = abierto ? rows : rows.slice(0, lim);
+  rows.filter(r => sel.has(r.k) && !vis.includes(r)).forEach(r => vis.push(r));
+  if (!rows.length) { el.innerHTML = '<div class="empty">Sin datos con los filtros actuales.</div>'; return; }
+  const max = Math.max(...rows.map(r => r.val), 1), M = MEDIDAS[ST.medida], fmt = DIMS[dim].fmt || (v => v);
+  el.innerHTML = vis.map((r, i) => `<div class="bar ${sel.has(r.k) ? 'sel' : sel.size ? 'dim' : ''}" data-i="${i}">
+      <div class="nm" title="${esc(fmt(r.k))}">${esc(fmt(r.k))}</div>
+      <div class="tr"><div class="fill" style="width:${Math.max(0.5, r.val / max * 72)}%"></div><span class="v">${M.fmt(r.val)}</span></div></div>`).join('')
+    + (rows.length > lim ? `<button class="more">${abierto ? 'Ver menos' : `Ver los ${rows.length}`}</button>` : '');
+  el.querySelectorAll('.bar').forEach(b => {
+    const r = vis[+b.dataset.i];
+    b.onclick = () => { hideTip(); toggle(dim, r.k); };
+    b.onmousemove = e => showTip(e, `<b>${esc(fmt(r.k))}</b>${nf.format(r.n)} obra${r.n === 1 ? '' : 's'}${dim === 'persona' && PERS_ROL[r.k] ? `<br><span class="r">${esc([...PERS_ROL[r.k]].join(', ').toLowerCase())}</span>` : ''}<br><span class="r">Presupuesto</span> ${money(r.presupuesto)}<br><span class="r">Pagado</span> ${money(r.pagado)}`);
+    b.onmouseleave = hideTip;
+  });
+  const more = el.querySelector('.more'); if (more) more.onclick = () => { ST.abiertos[id] = !abierto; barras(id, dim, opt); };
+}
+
+// ---------- KPIs ----------
+function kpis(arr) {
+  const sum = f => arr.reduce((s, o) => s + f(o), 0);
+  const pres = sum(o => o.presupuesto), pag = sum(o => o.pagado), ctr = sum(o => o.contratado);
+  const inc = arr.filter(o => o.grupo === 'Inconclusa').length;
+  const conAv = arr.filter(o => o.avance != null);
+  const avProm = conAv.length ? conAv.reduce((s, o) => s + o.avance, 0) / conAv.length : null;
+  const anios = arr.filter(o => o.anios != null).map(o => o.anios).sort((a, b) => a - b);
+  const med = anios.length ? anios[Math.floor(anios.length / 2)] : null;
+  const ind = sum(o => o.indemnizado), aseg = sum(o => o.asegurado);
+  const dupEnSel = arr.some(o => o.alertas.has('duplicado')) ? PRES_DUP : 0;
+  const K = [
+    ['Obras', nf.format(arr.length), `${nf.format(inc)} inconclusas · ${nf.format(arr.length - inc)} terminadas sin uso`],
+    ['Presupuesto total', money(pres), dupEnSel ? `incluye ~${money(dupEnSel)} posiblemente duplicado` : `contratado: ${money(ctr)}`],
+    ['Pagado', money(pag), pres ? `${pct(pag / pres * 100)} del presupuesto` : ''],
+    ['Avance físico promedio', avProm == null ? '—' : pct(avProm), `${nf.format(arr.filter(o => (o.avance || 0) <= 0).length)} obras en 0%`],
+    ['Tiempo desde el inicio', med == null ? '—' : nf1.format(med) + ' años', 'mediana, desde el primer contrato'],
+    ['Pólizas cobradas', money(ind), aseg ? `de ${money(aseg)} asegurados (${pct(ind / aseg * 100)})` : 'sin pólizas'],
+  ];
+  $('#kpis').innerHTML = K.map(([l, v, d]) => `<div class="card kpi"><div class="lbl">${l}</div><div class="val">${v}</div><div class="det">${d}</div></div>`).join('');
+}
+
+// ---------- alertas ----------
+function alertas() {
+  const base = filtradas('alerta').concat(); const sel = ST.f.alerta;
+  $('#alertas').innerHTML = ALERTAS.map(a => {
+    const n = base.filter(o => o.alertas.has(a.k) && [...sel].every(s => o.alertas.has(s))).length;
+    return `<div class="alert ${sel.has(a.k) ? 'sel' : ''}" data-k="${a.k}"><span class="ico ${a.lvl}">${a.ic}</span><div><div class="n">${nf.format(n)}</div><div class="t">${a.t}</div><div class="d">${a.d}</div></div></div>`;
+  }).join('');
+  $('#alertas').querySelectorAll('.alert').forEach(d => d.onclick = () => toggle('alerta', d.dataset.k));
+}
+
+// ---------- mapa ----------
+function proy(lon, lat) { const p = META.proy; return [(lon - p.lon0) * p.kx * p.esc, (p.lat1 - lat) * p.esc]; }
+function mapa() {
+  const p = META.proy; if (!p) return;
+  const arr = filtradas('muni'), M = MEDIDAS[ST.medida];
+  const porMun = {}; arr.forEach(o => { const x = porMun[o.codMun] || (porMun[o.codMun] = {n: 0, presupuesto: 0, pagado: 0}); x.n++; x.presupuesto += o.presupuesto; x.pagado += o.pagado; });
+  const val = c => porMun[c] ? (ST.medida === 'n' ? porMun[c].n : porMun[c][ST.medida]) : 0;
+  const vals = Object.keys(porMun).map(val).filter(v => v > 0).sort((a, b) => a - b);
+  // cortes por cuantiles (5 clases) para que Buenaventura no aplaste al resto
+  const cortes = [0.2, 0.4, 0.6, 0.8].map(q => vals[Math.floor(q * (vals.length - 1))] || 0);
+  const color = v => v <= 0 ? 'var(--seq-0)' : 'var(--seq-' + (1 + cortes.filter(c => v > c).length) + ')';
+  const filtrosMuni = ST.f.muni;
+  const pts = arr.filter(o => o.geo && o.geo.mpio_coord && typeof o.lat === 'number');
+  const maxP = Math.max(...OB.map(o => o.presupuesto), 1);
+  pts.sort((a, b) => b.presupuesto - a.presupuesto);
+  $('#mapa').innerHTML = `<svg viewBox="-10 -10 ${p.ancho + 20} ${p.alto + 20}" role="img" aria-label="Mapa del Valle del Cauca por municipio">
+    ${MAPA.map(m => `<path class="mun ${filtrosMuni.has(MUN_NOMBRE[m.cod]) ? 'sel' : ''}" data-c="${m.cod}" d="${m.d}" style="fill:${color(val(m.cod))}"/>`).join('')}
+    ${pts.map(o => { const [x, y] = proy(o.lon, o.lat); const r = 4 + 14 * Math.sqrt(o.presupuesto / maxP);
+      return `<circle class="pt" data-id="${o.id}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" style="fill:${o.grupo === 'Inconclusa' ? 'var(--s-inconclusa)' : 'var(--s-sinuso)'}" fill-opacity=".85"/>`; }).join('')}
+  </svg>`;
+  const sinPunto = arr.length - pts.length;
+  $('#mapaSub').textContent = `Color del municipio: ${M.lbl} de las obras filtradas. Puntos: ubicación reportada (tamaño = presupuesto).` + (sinPunto ? ` ${sinPunto} obra${sinPunto === 1 ? '' : 's'} sin coordenadas válidas no se dibuja${sinPunto === 1 ? '' : 'n'}.` : '');
+  $('#mapaLeyenda').innerHTML = `<span>Menos<span class="ramp">${[0, 1, 2, 3, 4, 5].map(i => `<i style="background:var(--seq-${i})"></i>`).join('')}</span>Más ${M.lbl}</span>
+    <span><span class="dot" style="background:var(--s-inconclusa)"></span>Inconclusa</span><span><span class="dot" style="background:var(--s-sinuso)"></span>Terminada sin uso</span>`;
+  $('#mapa').querySelectorAll('path.mun').forEach(el => {
+    const c = el.dataset.c, nom = MUN_NOMBRE[c], d = porMun[c];
+    el.onmousemove = e => showTip(e, `<b>${esc(nom)}</b>` + (d ? `${nf.format(d.n)} obra${d.n === 1 ? '' : 's'}<br><span class="r">Presupuesto</span> ${money(d.presupuesto)}<br><span class="r">Pagado</span> ${money(d.pagado)}` : '<span class="r">Sin obras con los filtros actuales</span>'));
+    el.onmouseleave = hideTip;
+    el.onclick = () => { hideTip(); toggle('muni', nom); };
+  });
+  $('#mapa').querySelectorAll('circle.pt').forEach(el => {
+    const o = OB.find(x => x.id === el.dataset.id);
+    el.onmousemove = e => showTip(e, `<b>${esc(o.desc.slice(0, 110))}${o.desc.length > 110 ? '…' : ''}</b><span class="r">${esc(o.muni)} · ${esc(o.grupo)} · avance ${pct(o.avance)}</span><br><span class="r">Presupuesto</span> ${money(o.presupuesto)} · <span class="r">Pagado</span> ${money(o.pagado)}<br><span class="r">Clic para ver la ficha</span>`);
+    el.onmouseleave = hideTip;
+    el.onclick = e => { e.stopPropagation(); hideTip(); abrir(o); };
+  });
+}
+
+// ---------- tabla ----------
+const COLS = [
+  {k: 'desc', t: 'Obra', s: o => o.desc, h: o => `<div class="desc">${esc(o.desc)}</div><div class="ent">${esc(o.entidad)}</div>`},
+  {k: 'muni', t: 'Municipio', s: o => o.muni, h: o => esc(o.muni)},
+  {k: 'clase', t: 'Clase', s: o => o.clase, h: o => esc(o.clase)},
+  {k: 'grupo', t: 'Estado', s: o => o.grupo, h: o => `<span class="badge ${o.grupo === 'Inconclusa' ? 'inc' : 'sin'}">${o.grupo}</span>`},
+  {k: 'avance', t: 'Avance', num: 1, s: o => o.avance ?? -1, h: o => `<div class="prog"><div class="b"><i style="width:${Math.min(100, o.avance || 0)}%"></i></div><span>${o.avance == null ? '—' : nf.format(Math.round(o.avance)) + '%'}</span></div>`},
+  {k: 'presupuesto', t: 'Presupuesto', num: 1, s: o => o.presupuesto, h: o => money(o.presupuesto)},
+  {k: 'pagado', t: 'Pagado', num: 1, s: o => o.pagado, h: o => money(o.pagado)},
+  {k: 'anios', t: 'Años', num: 1, s: o => o.anios ?? -1, h: o => o.anios == null ? '—' : nf1.format(o.anios)},
+  {k: 'alertas', t: 'Alertas', s: o => o.alertas.size, h: o => [...o.alertas].map(a => `<span class="ico mini-ico ${ALERTA[a].lvl}" title="${esc(ALERTA[a].t)}">${ALERTA[a].ic}</span>`).join('')},
+];
+const POR_PAG = 20;
+function tabla(arr) {
+  const {k, dir} = ST.sort, col = COLS.find(c => c.k === k);
+  arr = arr.slice().sort((a, b) => { const x = col.s(a), y = col.s(b); return (typeof x === 'string' ? x.localeCompare(y, 'es') : x - y) * dir; });
+  const pags = Math.max(1, Math.ceil(arr.length / POR_PAG)); ST.page = Math.min(ST.page, pags - 1);
+  const vis = arr.slice(ST.page * POR_PAG, (ST.page + 1) * POR_PAG);
+  $('#tabla thead').innerHTML = '<tr>' + COLS.map(c => `<th class="${c.num ? 'num' : ''}" data-k="${c.k}">${c.t}${c.k === k ? (dir > 0 ? ' ▲' : ' ▼') : ''}</th>`).join('') + '</tr>';
+  $('#tabla tbody').innerHTML = vis.map(o => `<tr data-id="${o.id}">` + COLS.map(c => `<td class="${c.num ? 'num' : ''}">${c.h(o)}</td>`).join('') + '</tr>').join('') || `<tr><td colspan="${COLS.length}" class="empty">Ninguna obra cumple los filtros.</td></tr>`;
+  $('#tabla thead').querySelectorAll('th').forEach(th => th.onclick = () => { const kk = th.dataset.k; ST.sort = {k: kk, dir: ST.sort.k === kk ? -ST.sort.dir : (COLS.find(c => c.k === kk).num ? -1 : 1)}; tabla(filtradas()); });
+  $('#tabla tbody').querySelectorAll('tr[data-id]').forEach(tr => tr.onclick = () => abrir(OB.find(o => o.id === tr.dataset.id)));
+  $('#pager').innerHTML = `<span>${nf.format(arr.length ? ST.page * POR_PAG + 1 : 0)}–${nf.format(Math.min(arr.length, (ST.page + 1) * POR_PAG))} de ${nf.format(arr.length)}</span>
+    <button class="btn sm" ${ST.page === 0 ? 'disabled' : ''} id="pPrev">‹ Anterior</button><button class="btn sm" ${ST.page >= pags - 1 ? 'disabled' : ''} id="pNext">Siguiente ›</button>`;
+  $('#pPrev').onclick = () => { ST.page--; tabla(filtradas()); };
+  $('#pNext').onclick = () => { ST.page++; tabla(filtradas()); };
+}
+function tablaHuerfanos() {
+  $('#tablaH thead').innerHTML = '<tr><th>Registro</th><th>Objeto del contrato</th><th>Municipio</th><th>Dependencia</th><th class="num">Valor contratado</th><th class="num">Pagado</th><th class="num">Pólizas</th></tr>';
+  $('#tablaH tbody').innerHTML = HU.map(o => `<tr data-id="${o.id}"><td>${o.id}</td><td><div class="desc">${esc(o.desc)}</div></td><td>${esc(o.muni)}</td><td>${esc(titleCase(((o.ejecutores || [])[0] || {}).ENTIDAD || '—'))}</td><td class="num">${money(o.contratado)}</td><td class="num">${money(o.pagado)}</td><td class="num">${nf.format((o.polizas || []).length)}</td></tr>`).join('');
+  $('#tablaH tbody').querySelectorAll('tr').forEach(tr => tr.onclick = () => abrir(HU.find(o => o.id === tr.dataset.id)));
+}
+
+// ---------- ficha de la obra ----------
+const LBL = {
+  NUMERO_CONTRATO: 'Contrato', OBJETO: 'Objeto', TIPO_MODIFICACION: 'Tipo', OTROSI: 'Otrosí', VALOR_CONTRATO: 'Valor', FECHA_INICIO: 'Inicio', FECHA_FIN: 'Fin',
+  PLAZO_EN_DIAS: 'Plazo (días)', ESTA_SECOP: 'En SECOP', CODIGO_SECOP: 'Código UNSPSC', JUSTIFICACION: 'Justificación', DESCRIPCION: 'Descripción', FECHA: 'Fecha', VALOR: 'Valor',
+  FUENTE: 'Fuente', PORCENTAJE: '%', ROL: 'Rol', TIPO_IDENTIFICACION: 'Tipo de documento', IDENTIFICACION: 'Identificación', NOMBRE: 'Nombre', AUTORIDAD: 'Autoridad (NIT)',
+  NUMERO_LICENCIA: 'Número', ESTADO_PRESUPUESTO: 'Movimiento', INDEMNIZACION: '¿Indemnización?', NIT: 'NIT', NUMERO_POLIZA: 'Póliza', RIESGOS: 'Riesgo amparado',
+  TIPO_GARANTIA: 'Garantía', VALOR_ASEGURADO: 'Valor asegurado', VALOR_INDEMNIZADO: 'Indemnizado', ENTIDAD: 'Entidad', ESTADO: 'Estado', NUMERO_PROCESO: 'Número', TIPO: 'Tipo',
+  COMPROMISOS: 'Compromisos', NUMERO_ACTA: 'Acta', CIUDAD: 'Municipio', DEPARTAMENTO: 'Departamento', COD_CIUDAD: 'Cód. DANE', FECHA_DE_CORTE: 'Corte',
+};
+const MONEY_F = new Set(['VALOR_CONTRATO', 'VALOR', 'VALOR_ASEGURADO', 'VALOR_INDEMNIZADO', 'PRESUPUESTO_TOTAL']);
+function celda(k, v) {
+  if (v == null || v === '') return '<span style="color:var(--muted)">—</span>';
+  if (MONEY_F.has(k)) return moneyFull(v);
+  if (k.startsWith('FECHA')) return fechaTxt(v);
+  if (k === 'PORCENTAJE') return nf1.format(v) + '%';
+  if (typeof v === 'number') return nf.format(v);
+  return esc(v);
+}
+function tablaGen(filas, cols) {
+  if (!filas || !filas.length) return '<div class="empty">No reportado.</div>';
+  cols = cols || [...new Set(filas.flatMap(Object.keys))].filter(k => k !== 'FECHA_DE_CORTE');
+  return `<div class="tbl-wrap"><table><thead><tr>${cols.map(c => `<th class="${MONEY_F.has(c) || c === 'PORCENTAJE' || c === 'PLAZO_EN_DIAS' ? 'num' : ''}">${LBL[c] || c}</th>`).join('')}</tr></thead>
+    <tbody>${filas.map(f => '<tr>' + cols.map(c => `<td class="${MONEY_F.has(c) || c === 'PORCENTAJE' || c === 'PLAZO_EN_DIAS' ? 'num' : ''}">${celda(c, f[c])}</td>`).join('') + '</tr>').join('')}</tbody></table></div>`;
+}
+const sec = (titulo, n, html) => `<div class="sec card"><h4>${titulo}${n != null ? ` <span class="cnt">${n}</span>` : ''}</h4>${html}</div>`;
+function abrir(o) {
+  const g = o.general || {};
+  const huerf = !o.general;
+  const kv = pares => `<div class="kv">${pares.filter(p => p).map(([l, v]) => `<div><span>${l}</span>${v == null || v === '' ? '—' : v}</div>`).join('')}</div>`;
+  const gmaps = typeof o.lat === 'number' ? `https://www.google.com/maps?q=${o.lat},${o.lon}` : null;
+  const al = [...o.alertas].map(a => `<div style="display:flex;gap:8px;align-items:flex-start;margin:4px 0"><span class="ico mini-ico ${ALERTA[a].lvl}">${ALERTA[a].ic}</span><div><b style="font-size:13px">${ALERTA[a].t}</b>${a === 'duplicado' ? ` — también reportada como <a href="#" data-dup="${dupDe.get(o.id)[0]}">${dupDe.get(o.id).join(', ')}</a>` : ''}${a === 'geoOtro' ? ` — cae en ${esc(MUN_NOMBRE[o.geo.mpio_coord] || o.geo.mpio_coord)}` : ''}<div style="font-size:12px;color:var(--text-2)">${ALERTA[a].d}</div></div></div>`).join('');
+  // pagos acumulados
+  let acum = 0;
+  const pagosHtml = o.pagos.length ? `<div class="tbl-wrap"><table><thead><tr><th>Fecha</th><th>Descripción</th><th class="num">Valor</th><th class="num">Acumulado</th><th style="width:28%">% del presupuesto</th></tr></thead><tbody>${o.pagos.map(p => { acum += p.VALOR || 0; const pp = o.presupuesto ? acum / o.presupuesto * 100 : 0;
+      return `<tr><td>${fechaTxt(p.FECHA)}</td><td>${esc(p.DESCRIPCION || '—')}</td><td class="num">${moneyFull(p.VALOR)}</td><td class="num">${moneyFull(acum)}</td><td><div class="prog"><div class="b"><i style="width:${Math.min(100, pp)}%"></i></div><span>${pct(pp)}</span></div></td></tr>`; }).join('')}</tbody></table></div>` : '<div class="empty">No reportó pagos.</div>';
+  const ctrHtml = o.ctr.length ? o.ctr.map(c => `<div class="ctr"><div class="top"><div><b>Contrato ${esc(c.numero || 's/n')}</b> · inicio ${fechaTxt(c.inicio)} · plazo ${c.plazo ? nf.format(c.plazo) + ' días' : '—'} · ${c.secop === 'SI' ? 'publicado en SECOP' : 'no figura en SECOP'}${c.codSecop ? ' · UNSPSC ' + esc(c.codSecop) : ''}</div>
+      <div style="text-align:right"><b>${moneyFull(c.valor)}</b>${c.valorInicial && c.valorInicial !== c.valor ? `<div style="font-size:12px;color:var(--text-2)">inicial ${moneyFull(c.valorInicial)} (${c.valor > c.valorInicial ? '+' : ''}${pct((c.valor / c.valorInicial - 1) * 100)})</div>` : ''}</div></div>
+      <div style="font-size:13px;margin-top:4px">${esc(c.objeto || '')}</div>${c.justificacion && norm(c.justificacion) !== norm(c.objeto) ? `<div style="font-size:12px;color:var(--text-2);margin-top:4px">Justificación: ${esc(c.justificacion)}</div>` : ''}
+      ${c.mods.length ? `<ul class="mods">${c.mods.map(m => `<li><b>${esc(m.TIPO_MODIFICACION || 'Modificación')}</b>${m.FECHA_INICIO ? ' · ' + fechaTxt(m.FECHA_INICIO) : ''} · valor acumulado ${moneyFull(m.VALOR_CONTRATO)}${m.PLAZO_EN_DIAS ? ' · ' + nf.format(m.PLAZO_EN_DIAS) + ' días' : ''}<div style="color:var(--text-2)">${esc(m.OBJETO || '')}</div></li>`).join('')}</ul>` : ''}</div>`).join('') : '<div class="empty">No reportó contratos.</div>';
+  const fuentesHtml = (o.fuentes || []).length ? `<div class="bars">${o.fuentes.map(f => `<div class="bar" style="cursor:default"><div class="nm" title="${esc(f.FUENTE)}">${esc(f.FUENTE)}</div><div class="tr"><div class="fill" style="width:${Math.min(100, f.PORCENTAJE || 0) * 0.72}%"></div><span class="v">${nf1.format(f.PORCENTAJE || 0)}%</span></div></div>`).join('')}</div>` : '<div class="empty">No reportado.</div>';
+  const modal = $('#modal');
+  modal.innerHTML = `<div class="mh"><button class="btn sm close" id="mClose">Cerrar ✕</button>
+      <div>${huerf ? '<span class="badge sin">Sin ficha general</span>' : `<span class="badge ${o.grupo === 'Inconclusa' ? 'inc' : 'sin'}">${o.grupo}</span>`} <span style="color:var(--muted);font-size:12px">Registro ${o.id} · ${esc(o.clase)}</span></div>
+      <h3>${esc(o.desc)}</h3>
+      <div style="color:var(--text-2);font-size:13px">${esc(o.entidad)}${g.NIT_ENTIDAD ? ' (NIT ' + esc(g.NIT_ENTIDAD) + ')' : ''} · ${esc(o.muni)}</div>
+      <div class="links">${huerf ? '' : `<a class="btn sm" target="_blank" rel="noopener" href="${COI}/reports?codEntidad=${o.cod_entidad}&codObra=${o.cod_obra}">Ver en la Contraloría ↗</a>`}${gmaps ? `<a class="btn sm" target="_blank" rel="noopener" href="${gmaps}">Ver ubicación en Google Maps ↗</a>` : ''}</div></div>
+    <div class="mb">
+      <div class="grid g-kpi" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+        <div class="card kpi"><div class="lbl">Presupuesto</div><div class="val">${money(o.presupuesto)}</div><div class="det">${moneyFull(o.presupuesto)}</div></div>
+        <div class="card kpi"><div class="lbl">Valor contratado</div><div class="val">${money(o.contratado)}</div><div class="det">${o.ctr.length} contrato${o.ctr.length === 1 ? '' : 's'} · ${o.ctr.reduce((s, c) => s + c.mods.length, 0)} modificaciones</div></div>
+        <div class="card kpi"><div class="lbl">Pagado</div><div class="val">${money(o.pagado)}</div><div class="det">${o.presupuesto ? pct(o.pagado / o.presupuesto * 100) + ' del presupuesto' : ''} · ${o.pagos.length} pagos</div></div>
+        <div class="card kpi"><div class="lbl">Avance físico</div><div class="val">${o.avance == null ? '—' : pct(o.avance)}</div><div class="det">${o.anios != null ? nf1.format(o.anios) + ' años desde el inicio' : ''}</div></div>
+      </div>
+      ${al ? sec('Alertas', o.alertas.size, al) : ''}
+      ${huerf ? sec('Situación', null, '<div class="note">Este registro no tiene formulario general en el COI: no se conoce su presupuesto, avance, causa ni estado. Se muestran los formularios de detalle que sí existen.</div>') :
+      sec('Situación', null, kv([
+        ['¿Por qué está en este estado?', esc(g.PORQUE_ESTADO)], ['Razón por la que no se usa', esc(g.RAZ_NOUSO)],
+        ['Causa (clasificada)', esc(o.causa)], ['Tipo de reporte', esc(g.TIPO_REPORTE)],
+        ['Decisión administrativa', esc(o.decision)], ['Acto administrativo', esc(g.ACTO_ADMINISTRATIVO)],
+        ['Sector', esc(g.SECTOR)], ['Registrada ante la Contraloría', fechaTxt(g.FECHA_INICIAL_REGISTRO)],
+        ['Área del predio (m²)', g.AREA_PREDIO != null ? nf.format(g.AREA_PREDIO) : null], ['Área contratada / construida (m²)', (g.AREA_CONTRATADA != null ? nf.format(g.AREA_CONTRATADA) : '—') + ' / ' + (g.AREA_CONSTRUIDA != null ? nf.format(g.AREA_CONSTRUIDA) : '—')],
+        ['Matrícula inmobiliaria', esc(g.MATRICULA_INMOVILIARIA)], ['Cédula catastral', esc(g.CEDULA_CATASTRAL)],
+        ['Coordenadas', typeof o.lat === 'number' ? `${o.lat}, ${o.lon}` + (g.LATITUDFINAL ? ` → ${g.LATITUDFINAL}, ${g.LONGITUDFINAL}` : '') : null],
+        ['PR inicial / final (vías)', g.PR_INICIAL || g.PR_FINAL ? `${esc(g.PR_INICIAL || '—')} ${esc(g.PR_INICIAL_M || '')} / ${esc(g.PR_FINAL || '—')} ${esc(g.PR_FINAL_M || '')}` : null],
+        ['Observación', esc(g.OBSERVACION)], ['Razón / solicitud de cancelación', [g.RAZON, g.RES_SOL_CANCELACION].filter(Boolean).map(esc).join(' · ') || null],
+        ['Posible repetida (según COI)', esc(g.POSIBLE_REPETIDA)], ['Código de autorización', esc(g.CODIGOAUTORIZACION)],
+        ['Origen del dato', o.origen === 'api' ? 'Ficha de la API del COI' : 'Export oficial del COI (el buscador no la muestra)'], ['Fecha de corte', fechaTxt(g.FECHA_DE_CORTE)],
+      ]))}
+      ${sec('Contratos y modificaciones', o.ctr.length, ctrHtml)}
+      ${sec('Pagos', o.pagos.length, pagosHtml)}
+      ${sec('Historia del presupuesto', (o.presupuesto_hist || []).length, tablaGen(o.presupuesto_hist, ['FECHA', 'ESTADO_PRESUPUESTO', 'VALOR']))}
+      ${sec('Fuentes de financiación', (o.fuentes || []).length, fuentesHtml)}
+      ${sec('Personas vinculadas', (o.personas || []).length, tablaGen(o.personas, ['ROL', 'NOMBRE', 'TIPO_IDENTIFICACION', 'IDENTIFICACION', 'FECHA']))}
+      ${sec('Pólizas y garantías', (o.polizas || []).length, tablaGen(o.polizas, ['NOMBRE', 'NIT', 'NUMERO_POLIZA', 'TIPO_GARANTIA', 'RIESGOS', 'FECHA_INICIO', 'FECHA_FIN', 'VALOR_ASEGURADO', 'INDEMNIZACION', 'VALOR_INDEMNIZADO']))}
+      ${sec('Procesos', (o.procesos || []).length, tablaGen(o.procesos, ['TIPO', 'NUMERO_PROCESO', 'ENTIDAD', 'ESTADO']))}
+      ${sec('Actas y compromisos', (o.actas || []).length, tablaGen((o.actas || []).slice().sort((a, b) => (a.FECHA || '').localeCompare(b.FECHA || '')), ['FECHA', 'NUMERO_ACTA', 'COMPROMISOS']))}
+      ${sec('Licencias y permisos', (o.licencias || []).length, tablaGen(o.licencias, ['FECHA', 'NUMERO_LICENCIA', 'DESCRIPCION', 'AUTORIDAD']))}
+      ${sec('Dependencia ejecutora', (o.ejecutores || []).length, tablaGen(o.ejecutores, ['ENTIDAD', 'NIT']))}
+      ${sec('Ubicación reportada', (o.ubicaciones || []).length, tablaGen(o.ubicaciones, ['DEPARTAMENTO', 'CIUDAD', 'COD_CIUDAD']))}
+    </div>`;
+  modal.classList.add('on'); $('#modalBg').classList.add('on'); modal.scrollTop = 0;
+  $('#mClose').onclick = cerrar;
+  modal.querySelectorAll('[data-dup]').forEach(a => a.onclick = e => { e.preventDefault(); abrir(OB.find(x => x.id === a.dataset.dup)); });
+}
+function cerrar() { $('#modal').classList.remove('on'); $('#modalBg').classList.remove('on'); }
+$('#modalBg').onclick = cerrar;
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrar(); });
+
+// ---------- chips ----------
+function chips() {
+  const out = [];
+  if (ST.q) out.push(`<span class="chip"><span class="chip-k">Búsqueda:</span> ${esc(ST.q)} <button data-q="1">×</button></span>`);
+  for (const [k, s] of Object.entries(ST.f)) for (const v of s) out.push(`<span class="chip"><span class="chip-k">${DIMS[k].lbl}:</span> ${esc(DIMS[k].fmt ? DIMS[k].fmt(v) : v)} <button data-k="${k}" data-v="${esc(v)}">×</button></span>`);
+  if (out.length > 1) out.push('<button class="btn sm" id="limpiar">Limpiar todo</button>');
+  $('#chips').innerHTML = out.join('');
+  $('#chips').querySelectorAll('button[data-k]').forEach(b => b.onclick = () => toggle(b.dataset.k, b.dataset.v));
+  const bq = $('#chips').querySelector('button[data-q]'); if (bq) bq.onclick = () => { ST.q = ''; $('#q').value = ''; render(); };
+  const l = $('#limpiar'); if (l) l.onclick = () => { ST.q = ''; $('#q').value = ''; Object.values(ST.f).forEach(s => s.clear()); render(); };
+}
+
+// ---------- hallazgos (sobre todo el universo) ----------
+function hallazgos() {
+  const tot = OB.length, pres = OB.reduce((s, o) => s + o.presupuesto, 0), pag = OB.reduce((s, o) => s + o.pagado, 0);
+  const porMun = {}; OB.forEach(o => porMun[o.muni] = (porMun[o.muni] || 0) + 1);
+  const [mTop, nTop] = Object.entries(porMun).sort((a, b) => b[1] - a[1])[0];
+  const mayor = OB.slice().sort((a, b) => b.presupuesto - a.presupuesto)[0];
+  const cnt = k => OB.filter(o => o.alertas.has(k)).length;
+  const causas = {}; OB.forEach(o => causas[o.causa] = (causas[o.causa] || 0) + 1);
+  const cTop = Object.entries(causas).filter(([c]) => !/terminada|sin explic|otra/i.test(c)).sort((a, b) => b[1] - a[1])[0];
+  const sinUso = OB.filter(o => o.grupo === 'Terminada sin uso');
+  const cero = OB.filter(o => (o.avance || 0) <= 0);
+  const ind = OB.reduce((s, o) => s + o.indemnizado, 0), aseg = OB.reduce((s, o) => s + o.asegurado, 0);
+  const viejas = cnt('diezAnios');
+  const L = [
+    `<b>${nf.format(tot)}</b> obras reportadas en el Valle, con un presupuesto de <b>${money(pres)}</b>. Ya se pagaron <b>${money(pag)}</b> (${pct(pag / pres * 100)}).`,
+    `<a data-f="muni" data-v="${esc(mTop)}"><b>${esc(mTop)}</b></a> concentra <b>${nf.format(nTop)}</b> obras (${pct(nTop / tot * 100)} del total del departamento).`,
+    `La más costosa: <a data-open="${mayor.id}">${esc(mayor.desc.slice(0, 80))}…</a> (${esc(mayor.muni)}), <b>${money(mayor.presupuesto)}</b>, el ${pct(mayor.presupuesto / pres * 100)} de todo el presupuesto, con ${pct(mayor.avance)} de avance.`,
+    `<a data-f="alerta" data-v="resuelta"><b>${nf.format(cnt('resuelta'))}</b> registros</a> siguen activos aunque la propia entidad escribe que la obra ya está terminada, en uso o que se reportó por error: el registro oficial está desactualizado.`,
+    cnt('duplicado') ? `<a data-f="alerta" data-v="duplicado"><b>${nf.format(cnt('duplicado'))}</b> registros</a> parecen duplicados (Altos de Santa Elena, reportado por Cali y por Fonvivienda): unos <b>${money(PRES_DUP)}</b> se cuentan dos veces.` : null,
+    cTop ? `La causa más citada es <a data-f="causa" data-v="${esc(cTop[0])}"><b>${esc(cTop[0].toLowerCase())}</b></a> (${nf.format(cTop[1])} obras).` : null,
+    `<a data-f="avance" data-v="0%"><b>${nf.format(cero.length)}</b> obras</a> reportan 0% de avance; <a data-f="alerta" data-v="pagoSinAvance"><b>${nf.format(cnt('pagoSinAvance'))}</b></a> de ellas igual tienen pagos registrados.`,
+    cnt('pagoMayor') ? `En <a data-f="alerta" data-v="pagoMayor"><b>${nf.format(cnt('pagoMayor'))}</b> obras</a> los pagos reportados superan el presupuesto (sobrecosto o error de reporte; la mayor diferencia, Altos de Santa Elena en Cali).` : null,
+    `<a data-f="grupo" data-v="Terminada sin uso"><b>${nf.format(sinUso.length)}</b> obras están terminadas pero sin uso</a>, con ${money(sinUso.reduce((s, o) => s + o.presupuesto, 0))} de presupuesto.`,
+    viejas ? `<a data-f="alerta" data-v="diezAnios"><b>${nf.format(viejas)}</b> obras</a> empezaron hace más de 10 años.` : null,
+    `Las aseguradoras han pagado <b>${money(ind)}</b> de <b>${money(aseg)}</b> asegurados (${pct(ind / aseg * 100)}).`,
+    `<a data-f="alerta" data-v="geoFuera"><b>${nf.format(cnt('geoFuera'))}</b></a> obras tienen coordenadas fuera del Valle y <a data-f="alerta" data-v="geoOtro"><b>${nf.format(cnt('geoOtro'))}</b></a> caen en otro municipio.`,
+    HU.length ? `Además hay <b>${nf.format(HU.length)}</b> registros con contratos y pagos en el Valle pero sin ficha general (ver el final de la página).` : null,
+  ].filter(Boolean);
+  $('#hallazgos').innerHTML = L.map(x => `<li>${x}</li>`).join('');
+  $('#hallazgos').querySelectorAll('a[data-f]').forEach(a => a.onclick = () => { Object.values(ST.f).forEach(s => s.clear()); ST.f[a.dataset.f].add(a.dataset.v); render(); $('.filters').scrollIntoView({behavior: 'smooth'}); });
+  $('#hallazgos').querySelectorAll('a[data-open]').forEach(a => a.onclick = () => abrir(OB.find(o => o.id === a.dataset.open)));
+}
+
+// ---------- CSV ----------
+function csv() {
+  const arr = filtradas();
+  const cols = [['Registro', o => o.id], ['Obra', o => o.desc], ['Entidad', o => o.entidad], ['NIT entidad', o => (o.general || {}).NIT_ENTIDAD], ['Municipio', o => o.muni],
+    ['Clase', o => o.clase], ['Estado', o => o.grupo], ['Causa', o => o.causa], ['Por qué (texto entidad)', o => (o.general || {}).PORQUE_ESTADO], ['Razón no uso', o => (o.general || {}).RAZ_NOUSO],
+    ['Decisión', o => o.decision], ['Avance %', o => o.avance], ['Presupuesto', o => o.presupuesto], ['Valor contratado', o => o.contratado], ['Pagado', o => o.pagado],
+    ['Inicio primer contrato', o => o.inicio], ['Años desde inicio', o => o.anios == null ? '' : o.anios.toFixed(1)], ['Contratos', o => o.ctr.map(c => c.numero).join(' | ')],
+    ['Personas', o => (o.personas || []).map(p => `${p.ROL}: ${p.NOMBRE} (${p.IDENTIFICACION})`).join(' | ')], ['Aseguradoras', o => o.aseguradoras.join(' | ')],
+    ['Valor asegurado', o => o.asegurado], ['Indemnizado', o => o.indemnizado], ['Fuentes', o => o.fuentesN.join(' | ')], ['Procesos', o => o.procesosN.join(' | ')],
+    ['Alertas', o => [...o.alertas].map(a => ALERTA[a].t).join(' | ')], ['Latitud', o => o.lat], ['Longitud', o => o.lon],
+    ['Enlace Contraloría', o => `${COI}/reports?codEntidad=${o.cod_entidad}&codObra=${o.cod_obra}`]];
+  const q = v => { v = v == null ? '' : String(v); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const txt = '﻿' + [cols.map(c => c[0]).join(';'), ...arr.map(o => cols.map(c => q(c[1](o))).join(';'))].join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], {type: 'text/csv;charset=utf-8'}));
+  a.download = 'obras_inconclusas_valle.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+// ---------- render ----------
+function render() {
+  const arr = filtradas();
+  $('#countLbl').textContent = arr.length === OB.length ? `${nf.format(OB.length)} obras` : `${nf.format(arr.length)} de ${nf.format(OB.length)} obras`;
+  chips(); kpis(arr); alertas(); mapa();
+  barras('muni', 'muni', {lim: 12}); barras('causa', 'causa'); barras('clase', 'clase'); barras('grupo', 'grupo'); barras('decision', 'decision');
+  barras('avance', 'avance', {orden: AV_RANGOS}); barras('inicio', 'inicio', {cronologico: 1, lim: 30}); barras('registro', 'registro', {cronologico: 1});
+  barras('entidad', 'entidad', {lim: 12}); barras('fuente', 'fuente', {lim: 12}); barras('proceso', 'proceso'); barras('aseguradora', 'aseguradora', {lim: 8}); barras('persona', 'persona', {lim: 8});
+  tabla(arr);
+}
+let tq; $('#q').addEventListener('input', e => { clearTimeout(tq); tq = setTimeout(() => { ST.q = e.target.value.trim(); ST.page = 0; render(); }, 180); });
+$('#segMedida').querySelectorAll('button').forEach(b => b.onclick = () => { ST.medida = b.dataset.v; $('#segMedida').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); render(); });
+$('#btnCsv').onclick = csv;
+$('#meta').innerHTML = `Fuente: <a href="${esc(META.fuente)}" target="_blank" rel="noopener">Contraloría General de la República — Consulta de Obras Inconclusas (COI)</a> · Corte de la ficha general: ${fechaTxt(META.corte_general)} · detalle: ${fechaTxt(META.corte_detalle)} · descargado ${esc(META.generado)}`;
+$('#foot').textContent = `Registros: ${OB.length} obras (${META.n_api} por la API del COI, ${META.n_export} solo en el export) + ${HU.length} sin ficha general. Montos en pesos corrientes; M = millones.`;
+hallazgos(); tablaHuerfanos(); render();
+</script>
+</body>
+</html>
